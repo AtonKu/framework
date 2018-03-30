@@ -1,4 +1,4 @@
-package com.atonku.controller;
+package com.atonku.controller1;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
