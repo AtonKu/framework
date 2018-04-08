@@ -11,7 +11,7 @@ import java.io.IOException;
  * 客户创建控制器, 使用相同的url地址处理不同的请求
  * 在servlet中有四中请求, 分别为POST, GET, DELTEE, PUT, 对应的请求为doPost, doGet, doDelete, doPut
  * @Date: 2018/3/30 16:13
- * @Author: guyatong
+ * @Author: GYT
  * @Modified by:
  **/
 @WebServlet("/customer_create")
