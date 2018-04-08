@@ -3,7 +3,6 @@ package com.atonku.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.imageio.IIOException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,7 +11,7 @@ import java.util.Properties;
 /**
  * @Description: 属性文件工具类
  * @Date: 2018/4/8 13:31
- * @Author: guyatong
+ * @Author: GYT
  * @Modified by:
  **/
 public final class PropsUtil {
