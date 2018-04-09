@@ -1,11 +1,12 @@
 package com.atonku.service;
 
 import com.atonku.entity.Customer;
-import com.atonku.util.PropsUtil;
+import com.atonku.helper.DatabaseHelper;
+//import com.atonku.util.PropsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.*;
+//import java.sql.*;
 import java.util.*;
 
 /**
@@ -19,7 +20,7 @@ import java.util.*;
  *
  * @Date: 2018/3/30 16:18
  * @Author: GYT
- * @Modified by:
+ * @Modified by: 2018/04/09
  *
  **/
 public class CustomerService {
@@ -30,25 +31,28 @@ public class CustomerService {
      * 在该类中执行数据库操作。
      */
 
-    /*为jdbc配置项定义一些常量，并提供一个静态代码块来初始化这些常量*/
-    private static final String DRIVER;
-    private static final String URL;
-    private static final String USERNAME;
-    private static final String PASSWORD;
-
-    static {
-        Properties conf = PropsUtil.loadProps("jdbc.properties");
-        DRIVER = conf.getProperty("jdbc.driver");
-        URL = conf.getProperty("jdbc.url");
-        USERNAME = conf.getProperty("jdbc.username");
-        PASSWORD = conf.getProperty("jdbc.password");
-
-        try {
-            Class.forName(DRIVER);
-        } catch (ClassNotFoundException e) {
-            LOGGER.error("can not load jdbc driver", e);
-        }
-    }
+    /**
+     * 优化代码
+     */
+//    /*为jdbc配置项定义一些常量，并提供一个静态代码块来初始化这些常量*/
+//    private static final String DRIVER;
+//    private static final String URL;
+//    private static final String USERNAME;
+//    private static final String PASSWORD;
+//
+//    static {
+//        Properties conf = PropsUtil.loadProps("jdbc.properties");
+//        DRIVER = conf.getProperty("jdbc.driver");
+//        URL = conf.getProperty("jdbc.url");
+//        USERNAME = conf.getProperty("jdbc.username");
+//        PASSWORD = conf.getProperty("jdbc.password");
+//
+//        try {
+//            Class.forName(DRIVER);
+//        } catch (ClassNotFoundException e) {
+//            LOGGER.error("can not load jdbc driver", e);
+//        }
+//    }
 
     /**
      * 获取客户列表
@@ -62,15 +66,26 @@ public class CustomerService {
      *         PreparedStatement比 Statement 更快;
      *         PreparedStatement可以防止SQL注入式攻击（拼接sql字符串的形式进行数据库攻击）
      *         PreparedStatement不允许一个占位符（？）有多个值，在执行有**IN**子句查询的时候这个问题变得棘手起来。
+     * @time    ①2018/04/08
+     *          ②2018/04/09
      */
     public List<Customer> getCustomerList(String keyword){
         //TODO
-        Connection connection = null;
+        /* 更新ThreadLocal后的代码 */
+        String sql = "SELECT * FROM customer";
+        return DatabaseHelper.queryEntityList(Customer.class, sql);
+        /*Connection connection = null;
         try {
-            List<Customer> customerList = new ArrayList<Customer>();
+            //List<Customer> customerList = new ArrayList<Customer>();
             String sql = "SELECT * FROM customer";
-            connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            connection = DatabaseHelper.getConnection();
+
+
+
+            *//* 更新添加dbutils后优化的代码 *//*
+            //return DatabaseHelper.queryEntityList(connection, Customer.class, sql);
+            *//* 原始代码 *//*
+            *//*PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet resultSet = preparedStatement.getResultSet();
             while (resultSet.next()) {
                 Customer customer = new Customer();
@@ -84,24 +99,19 @@ public class CustomerService {
             }
             return customerList;
         } catch (SQLException e) {
-            LOGGER.error("execute sql failure", e);
+            LOGGER.error("execute sql failure", e);*//*
         } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    LOGGER.error("close connection failure", e);
-                }
-            }
-        }
-
-        return null;
+            DatabaseHelper.closeConnection(connection);
+        }*/
+//        return null;
     }
 
     /**
      * 获取客户详情
      * @param id
      * @return
+     * @time    ①2018/04/08
+     *          ②2018/04/09
      */
     public Customer getCustomer(long id){
         //TODO
@@ -112,10 +122,12 @@ public class CustomerService {
      * 创建用户
      * @param fieldMap
      * @return
+     * @time    ①2018/04/08
+     *          ②2018/04/09
      */
     public boolean creatCustomer(Map<String, Object> fieldMap){
         // TODO
-        return false;
+        return DatabaseHelper.insertEntity(Customer.class, fieldMap);
     }
 
     /**
@@ -123,20 +135,24 @@ public class CustomerService {
      * @param id
      * @param fieldMap
      * @return
+     * @time    ①2018/04/08
+     *          ②2018/04/09
      */
     public boolean updateCusomer(long id, Map<String, Object> fieldMap){
         //TODO
-        return false;
+        return DatabaseHelper.updateEntity(Customer.class, id, fieldMap);
     }
 
     /**
      * 删除客户
      * @param id
      * @return
+     * @time    ①2018/04/08
+     *          ②2018/04/09
      */
     public boolean deleteCustomer(long id){
         //TODO
-        return false;
+        return DatabaseHelper.deleteEntity(Customer.class, id);
     }
 
 }
